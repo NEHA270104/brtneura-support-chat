@@ -1,0 +1,27 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: support_chat
+    ports:
+      - "5432:5432"
+
+  backend:
+    build: ./api
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql://postgres:admin@db:5432/support_chat
+    depends_on:
+      - db
+
+  frontend:
+    build: ./web
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
